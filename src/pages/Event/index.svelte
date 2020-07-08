@@ -1,21 +1,21 @@
 <script>
-  import { onMount } from 'svelte';
-  import * as styles from './styles';
-  import * as routerTools from '../../global_tools/router_tools';
+  import { onMount } from 'svelte'
+  import * as styles from './styles'
+  import * as routerTools from '../../global_tools/router_tools'
+  import { events } from '../../store'
 
-  let event = { notes: [] };
-  let characters = [];
+  let event = {};
 
   onMount(() => {
-    // event = tools.getEvent(id);
-    // characters = tools.getAssociatedCharactersByIds(event.associatedCharactersIds)
+    console.log($events)
+    event = $events.find(e => e.id === id)
   });
 
   const goToCharacterPage = (characterId) => {
-    routerTools.goToCharacterPage(characterId);
+    routerTools.goToCharacterPage(characterId)
   }
 
-  export let id;
+  export let characterId, id;
 </script>
 
 <main class={styles.eventPage}>
@@ -26,20 +26,17 @@
   <h3>Associated Characters</h3>
   <section>
     <p>
-      {#each characters as character}
-        <span class={styles.characterLink} on:click={() => goToCharacterPage(character.id)}>
-          {character.name}
-        </span>
-        &nbsp;&nbsp;
+      {#each $events as event}
+        <p>{event.description}</p>
       {/each}
     </p>
   </section>
-  <h3>Author Notes</h3>
+  <!-- <h3>Author Notes</h3>
   <section>
     {#each event.notes as note}
       <div class={styles.note}>
         {note}
       </div>
     {/each}
-  </section>
+  </section> -->
 </main>

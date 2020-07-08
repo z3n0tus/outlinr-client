@@ -4,6 +4,6 @@ export const goToCharacterPage = (id) => {
   navigate(`/character/${id}`);
 };
 
-export const goToEventPage = (id) => {
-  navigate(`/event/${id}`);
+export const goToEventPage = (characterId, eventId) => {
+  navigate(`/event/${characterId}/${eventId}`);
 }

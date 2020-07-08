@@ -1,18 +1,21 @@
 <script>
-  import { onMount } from 'svelte';
-  import * as styles from './styles';
-  import * as routerTools from '../../global_tools/router_tools';
+  import { onMount } from 'svelte'
+  import * as styles from './styles'
+  import * as routerTools from '../../global_tools/router_tools'
+  import * as api from '../../api'
+  import { characters, events } from '../../store'
 
+  let editMode = false
   let character = { };
   let backstoryEvents = [];
 
   onMount(() => {
-    // character = tools.getCharacter(id);
-    // backstoryEvents = tools.getAllBackstoryEvents(character.backstoryEventsIds);
+    character = $characters.find(c => c.id === id)
+    backstoryEvents = $events.filter(e => character.backstoryEvents.includes(e.id))
   })
 
-  const goToEventPage = (id) => {
-    routerTools.goToEventPage(id);
+  const goToEventPage = (eventId) => {
+    routerTools.goToEventPage(id, eventId);
   }
 
   export let id;
@@ -25,11 +28,15 @@
   </section>
   <section class={styles.backstoryEvents}>
     <h2>Backstory Events</h2>
-    {#each backstoryEvents as event}
-      <div on:click={() => goToEventPage(event.id)}>
-        {event.description}
-      </div>
-    {/each}
+    {#if backstoryEvents}
+      {#each backstoryEvents as event}
+        <div on:click={() => goToEventPage(event.id)}>
+          {event.description}
+        </div>
+      {/each}
+    {:else}
+      <p>This character has no backstory events.</p>
+    {/if}
   </section>
 </main>
 
