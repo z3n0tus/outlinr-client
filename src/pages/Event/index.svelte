@@ -1,6 +1,5 @@
 <script>
   import { onMount } from 'svelte'
-  import * as styles from './styles'
   import * as routerTools from '../../global_tools/router_tools'
   import { events } from '../../store'
 
@@ -18,7 +17,7 @@
   export let characterId, id;
 </script>
 
-<main class={styles.eventPage}>
+<main>
   <h1>Event</h1>
   <section>
     <p>{event.description}</p>
@@ -31,12 +30,4 @@
       {/each}
     </p>
   </section>
-  <!-- <h3>Author Notes</h3>
-  <section>
-    {#each event.notes as note}
-      <div class={styles.note}>
-        {note}
-      </div>
-    {/each}
-  </section> -->
 </main>
