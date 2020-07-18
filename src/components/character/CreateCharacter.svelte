@@ -1,63 +1,63 @@
 <script>
   import { onMount } from 'svelte'
-  import { Button, Input } from '../basic'
+  import { Button, Input, Container, Multiselect } from '../basic'
   import { CreateEvent } from '../event'
+  import { events } from '../../store'
+  import * as api from '../../api'
 
   let name = ''
   let imgURL = ''
-  let allBackstoryEvents = []
-  let newBackstoryEvents = []
+  let allEvents = []
+  let backstoryEvents = []
+
   let createEventMode = false
 
   onMount(() => {
-    allBackstoryEvents = backstoryEvents
+    events.subscribe((es) => {
+      allEvents = es.map(e => ({ ...e, value: e.description }))
+    })
   })
 
+  const addBackstoryEvent = (event) => {
+    backstoryEvents = [...backstoryEvents, event.id]
+  }
+
+  const removeBackstoryEvent = (event) => {
+    backstoryEvents = backstoryEvents.filter(be => be !== event.id)
+  }
+
   function save() {
-    // Save character and all newly created events.
-    saveCharacter({ name, imgURL, backstoryEvents: allBackstoryEvents.map(be => be.id) }, newBackstoryEvents)
+    if (name.length >= 0) {
+      api.saveEntity("Lee", "character", { backstoryEvents, name, imgURL })
+    }
   }
 
-  function saveNewEvent(event) {
-    createEventMode = false
-    allBackstoryEvents = [...allBackstoryEvents, event]
-    newBackstoryEvents = [...newBackstoryEvents, event]
-  }
-
-  function closeEventCreator() {
-    createEventMode=false
-  }
-
-  export let saveCharacter, backstoryEvents
 </script>
 
-<h1>Create new Character</h1>
-<hr />
-
-<Input bind:value={name} label="Name" />
-<Input bind:value={imgURL} label="Image URL" />
-<br />
-<hr />
-<p>All Backstory Events</p>
-
-{#if createEventMode}
-  <p on:click={closeEventCreator} class="close">X</p>
-  <CreateEvent saveEvent={saveNewEvent} />
-{:else}
-  <Button onClick={() => createEventMode = true}>Create new Event</Button>
-{/if}
-
-{#each allBackstoryEvents as event}
-  <div>
-    {event.description}
-  </div>
-{/each}
-<hr />
-<br />
-<Button onClick={save}>Save</Button>
+<main>
+  <h1>Create new Character</h1>
+  <Container>
+    <Input bind:value={name} label="* Name" />
+  </Container>
+  <br />
+  <Container>
+    <Input bind:value={imgURL} label="Image URL" />
+  </Container>
+  <br />
+  <Container>
+    <Multiselect
+      label="Add Backstory Event"
+      options={allEvents}
+      selectItem={addBackstoryEvent}
+      deselectItem={removeBackstoryEvent}
+    />
+  </Container>
+  <br />
+  <Button onClick={save}>Save Character</Button>
+</main>
 
 <style>
-  .close {
-    color: blue;
+  main {
+    padding: 16px;
   }
 </style>

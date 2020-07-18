@@ -5,7 +5,7 @@
   import { characters, events, stories, subplots } from './store'
   import * as api from './api'
 
-  import { CreateSubplot } from './components/subplot'
+  import { CreateCharacter } from './components/character'
   
   onMount(async () => {
     const storiesResponse = await api.getEntities('Lee', 'story')
@@ -44,5 +44,4 @@
   </Router>
 </main> -->
 
-<CreateSubplot />
-
+<CreateCharacter />
