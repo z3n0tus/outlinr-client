@@ -1,3 +1,6 @@
-export { default as CharactersPage } from './Characters/index.svelte';
-export { default as CharacterPage } from './Character/index.svelte';
-export { default as EventPage } from './Event/index.svelte';
+export { default as CharactersPage } from './Characters/index.svelte'
+export { default as StoriesPage } from './Stories/index.svelte'
+export { default as CharacterPage } from './Character/index.svelte'
+export { default as EventPage } from './Event/index.svelte'
+export { default as StoryPage } from './Story/index.svelte'
+export { default as SubplotPage } from './Subplot/index.svelte'

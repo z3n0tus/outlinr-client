@@ -1,10 +1,5 @@
 <script>
   import { onMount } from 'svelte'
-  import * as routerTools from '../../global_tools/router_tools'
-
-  const goToEventPage = (eventId) => {
-    routerTools.goToEventPage(id, eventId);
-  }
 
   export let character, backstoryEvents
 </script>
@@ -18,7 +13,7 @@
     <h2>Backstory Events</h2>
     {#if backstoryEvents}
       {#each backstoryEvents as event}
-        <div on:click={() => goToEventPage(event.id)}>
+        <div>
           {event.description}
         </div>
       {/each}

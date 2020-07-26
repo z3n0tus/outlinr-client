@@ -1,72 +1,62 @@
 <script>
   import { onMount } from 'svelte'
+  import { push } from 'svelte-spa-router'
   import { Container, Input, Multiselect, Button } from '../basic'
-  import { characters, subplots } from '../../store'
   import * as api from '../../api'
 
-  let error = ""
-
-  let name = ""
-  let beginning = ""
-  let end = ""
-  let associatedThreads = []
-  let associatedCharacters = []
-  let themes = []
-  let owner = "Lee"
-  let allCharacters = []
-  let allSubplots = []
-
-  onMount(() => {
-    characters.subscribe((cs) => {
-      allCharacters = cs.map(c => ({ ...c, value: c.name }))
-    })
-
-    subplots.subscribe((ss) => {
-      allSubplots = ss.map(s => ({ ...s, value: s.description }))
-    })
-  })
-
-  const addAssociatedThread = (thread) => {
-    associatedThreads = [...associatedThreads, thread.id]
+  let story = {
+    name: '',
+    beginning: '',
+    end: '',
+    associatedSubplots: [],
+    associatedCharacters: [],
+    themes: '',
   }
 
-  const removeAssociatedThread = (thread) => {
-    associatedThreads = associatedThreads.filter(at => at !== thread.id)
+  let error = ""
+  let owner = "Lee"
+
+  $: {
+    if (storyToEdit) {
+      story = storyToEdit
+    }
+  }
+
+  const addAssociatedSubplot = (subplot) => {
+    story.associatedSubplots = [...story.associatedSubplots, subplot.id]
+  }
+
+  const removeAssociatedSubplot = (subplot) => {
+    story.associatedSubplots = story.associatedSubplots.filter(at => at !== subplot.id)
   }
 
   const addAssociatedCharacter = (character) => {
-    associatedCharacters = [...associatedCharacters, character.id]
+    story.associatedCharacters = [...story.associatedCharacters, character.id]
   }
 
   const removeAssociatedCharacter = (character) => {
-    associatedCharacters = associatedCharacters.filter(ac => ac !== character.id)
+    story.associatedCharacters = story.associatedCharacters.filter(ac => ac !== character.id)
   }
 
   const saveStory = () => {
-    if (name.length > 0) {
-      api.saveEntity("Lee", "story", {
-        name,
-        beginning,
-        end,
-        themes,
-        characters: associatedCharacters,
-        subplots: associatedThreads,
-      })
+    if (story.name.length > 0) {
+      api.saveEntity("Lee", "story", story).then(() => push('/'))
     } else {
       error = "Name is a required field."
     }
   }
+
+  export let storyToEdit, allCharacters = [], allSubplots = []
 </script>
 
 <main>
   {#if error}
     <p class="error">{error}</p>
   {/if}
-  <h1>Create Story</h1>
   <Container>
     <Input
       label="* Name"
-      bind:value={name}
+      bind:value={story.name}
     />
   </Container>
   <br />
@@ -74,7 +64,7 @@
     <Input
       label="Beginning"
       placeholder="Give a brief overview of your story's beginning."
-      bind:value={beginning}
+      bind:value={story.beginning}
       textarea
     />
   </Container>
@@ -83,24 +73,24 @@
     <Input
       label="End"
       placeholder="Give a brief overview of your story's ending."
-      bind:value={end}
+      bind:value={story.end}
       textarea
     />
   </Container>
   <br />
   <Container>
     <Multiselect
-      label="Add Threads"
-      options={allSubplots}
-      selectItem={addAssociatedThread}
-      deselectItem={removeAssociatedThread}
+      label="Add Subplot"
+      options={allSubplots.map((s) => ({ ...s, value: s.description }))}
+      selectItem={addAssociatedSubplot}
+      deselectItem={removeAssociatedSubplot}
     />
   </Container>
   <br />
   <Container>
     <Multiselect
       label="Add Characters"
-      options={allCharacters}
+      options={allCharacters.map(c => ({ ...c, value: c.name }))}
       selectItem={addAssociatedCharacter}
       deselectItem={removeAssociatedCharacter}
     />
@@ -109,7 +99,7 @@
   <Container>
     <Input
       label="Themes"
-      bind:value={themes}
+      bind:value={story.themes}
       placeholder="Give a list of your story's themes."
     />
   </Container>
@@ -122,11 +112,6 @@
 <style>
   main {
     padding: 8px;
-  }
-
-  h1 {
-    margin-left: 20px;
-    font-weight: normal;
   }
 
   .error {

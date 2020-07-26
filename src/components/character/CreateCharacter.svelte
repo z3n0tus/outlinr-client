@@ -31,11 +31,9 @@
       api.saveEntity("Lee", "character", { backstoryEvents, name, imgURL })
     }
   }
-
 </script>
 
 <main>
-  <h1>Create new Character</h1>
   <Container>
     <Input bind:value={name} label="* Name" />
   </Container>

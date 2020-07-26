@@ -68,7 +68,6 @@
   {#if error}
     <p class="error">{error}</p>
   {/if}
-  <h1>Create Subplot</h1>
   <Container>
     <Input
       label="* Description"
@@ -140,12 +139,6 @@
   main {
     padding: 8px;
   }
-
-  h1 {
-    margin-left: 20px;
-    font-weight: normal;
-  }
-
   .error {
     color: salmon;
     padding: 8px;

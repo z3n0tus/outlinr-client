@@ -1,47 +1,99 @@
 <script>
   import { onMount } from 'svelte'
-  import { Router, Route, Link } from 'svelte-routing'
-  import { CharactersPage, CharacterPage, EventPage } from './pages'
+  import Router, { push } from 'svelte-spa-router'
   import { characters, events, stories, subplots } from './store'
-  import * as api from './api'
-
+  import { Button } from './components/basic'
   import { CreateCharacter } from './components/character'
+  import {
+    CharactersPage,
+    StoriesPage,
+    StoryPage,
+    SubplotPage,
+    CharacterPage,
+    EventPage,
+  } from './pages'
   
   onMount(async () => {
-    const storiesResponse = await api.getEntities('Lee', 'story')
-    const subplotsResponse = await api.getEntities('Lee', 'subplot')
-    const charactersResponse = await api.getEntities('Lee', 'character')
-    const eventsResponse = await api.getEntities('Lee', 'event')
-
-    characters.setCharacters(charactersResponse)
-    events.setEvents(eventsResponse)
-    stories.setStories(storiesResponse)
-    subplots.setSubplots(subplotsResponse)
+    
   })
 
-  const url = '/characters'
+  let showCreateDropdown = false
+
+  const routes = {
+    '/': StoriesPage,
+    '/story': StoryPage,
+    '/story/:id': StoryPage,
+    '/character': CharacterPage,
+    '/subplot': SubplotPage,
+    '/event': EventPage,
+  }
+
+  function toggleCreateDropdown() {
+    showCreateDropdown = !showCreateDropdown
+  }
+
+  function goHome() {
+    push('/')
+  }
 </script>
 
 <style>
   nav {
-    margin-bottom: 8px;
     background-color: black;
-    padding: 12px;
+    padding: 16px;
+  }
+
+  h1 {
+    margin: 0;
+    font-weight: normal;
+    font-size: 28px;
+  }
+
+  nav {
+    display: flex;
+  }
+
+  .title {
+    flex: 3;
+  }
+
+  .create {
+    font-size: 12px;
+    position: relative;
+  }
+
+  .dropdown {
+    position: absolute;
+    background-color: black;
+    width: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+  }
+
+  .dropdown > a {
+    display: block;
+    margin: 4px;
   }
 </style>
 
 <nav>
-  Outlinr
+  <div class="title">
+    <h1 on:click={goHome}>Outlinr</h1>
+  </div>
+  <div class="create">
+    <Button onClick={toggleCreateDropdown}>Create</Button>
+    {#if showCreateDropdown}
+      <div class="dropdown" on:click={toggleCreateDropdown}>
+        <a href="#/story">Story</a>
+        <a href="#/subplot">Subplot</a>
+        <a href="#/character">Character</a>
+        <a href="#/event">Event</a>
+      </div>
+    {/if}
+  </div>
 </nav>
-<!-- <main>
-  <Router url={url}>
-     <div>
-        <Route path="create/character" component={CharacterPage} />
-        <Route path="character/:id" component={CharacterPage} />
-        <Route path="characters" component={CharactersPage} />
-        <Route path="event/:characterId/:id" component={EventPage} />
-     </div>
-  </Router>
-</main> -->
+<main>
+  <Router {routes} />
+</main>
 
-<CreateCharacter />
+

@@ -19,7 +19,8 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
-    "svelte-routing": "^1.4.2",
+    "svelte-emoji": "^1.0.2",
+    "svelte-spa-router": "^2.2.0",
     "uuid": "^8.2.0",
     "uuid-v4": "^0.1.0"
   }

@@ -34,7 +34,6 @@
 </script>
 
 <main>
-  <h1>Create Event</h1>
   <Container>
     <Input
       textarea
