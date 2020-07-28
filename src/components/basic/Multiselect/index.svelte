@@ -9,12 +9,17 @@
 
   onMount(() => {
     options.forEach(o => {
-      if (!o.id || !o.value) {
+      if (!o[displayKey] || !o[identificationKey]) {
+        console.log(o)
         console.error(
-          "Multiselect component won't work because some options don't have an id or a value field. Both are required."
+          "Multiselect component won't work because some options don't have the corresponding display or identification key."
         )
       }
     })
+
+    if (alreadySelected) {
+      selected = alreadySelected.map(id => options.find(o => o[identificationKey] === id))
+    }
   })
 
   const addSelected = (selection) => {
@@ -24,7 +29,7 @@
 
   const removeSelected = (selection) => {
     deselectItem(selection)
-    selected = selected.filter(s => s.id !== selection.id)
+    selected = selected.filter(s => s[identificationKey] !== selection[identificationKey])
   }
 
   const toggleSelected = (selection) => {
@@ -40,11 +45,11 @@
   }
 
   $: {
-    filteredOptions = options.filter(o => o.value.toLowerCase().includes(filterTerm.toLowerCase()))
+    filteredOptions = options.filter(o => o[displayKey].toLowerCase().includes(filterTerm.toLowerCase()))
   }
 
   // Option must have a 'value' field and an 'id' field on it so that the dropdown knows what to display.
-  export let options, selectItem, deselectItem, label
+  export let options, selectItem, deselectItem, label, displayKey, identificationKey, alreadySelected
 </script>
 
 <main>
@@ -57,7 +62,7 @@
           class="selected-list-item"
           on:click={() => toggleSelected(selection)}
         >
-          {selection.value}, 
+          {selection[displayKey]}, 
         </span>
       {/each}
     </p>
@@ -70,7 +75,7 @@
           on:click={() => toggleSelected(option)}
           class:selected={selected.indexOf(option) > -1}
         >
-          {option.value}
+          {option[displayKey]}
         </div>
       {/each}
     </div>

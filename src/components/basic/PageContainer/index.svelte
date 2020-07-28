@@ -28,6 +28,10 @@
   h3 {
     font-weight: normal;
     margin-top: 0;
+    font-size: 22px;
+    color: white;
+    border-left: 3px solid yellow;
+    padding-left: 16px;
   }
 
 </style>

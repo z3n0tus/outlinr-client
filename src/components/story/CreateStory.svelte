@@ -8,8 +8,8 @@
     name: '',
     beginning: '',
     end: '',
-    associatedSubplots: [],
-    associatedCharacters: [],
+    subplots: [],
+    characters: [],
     themes: '',
   }
 
@@ -17,25 +17,25 @@
   let owner = "Lee"
 
   $: {
-    if (storyToEdit) {
-      story = storyToEdit
+    if (existingStory) {
+      story = existingStory
     }
   }
 
-  const addAssociatedSubplot = (subplot) => {
-    story.associatedSubplots = [...story.associatedSubplots, subplot.id]
+  const addSubplot = (subplot) => {
+    story.subplots = [...story.subplots || [], subplot.id]
   }
 
-  const removeAssociatedSubplot = (subplot) => {
-    story.associatedSubplots = story.associatedSubplots.filter(at => at !== subplot.id)
+  const removeSubplot = (subplot) => {
+    story.subplots = story.subplots.filter(at => at !== subplot.id)
   }
 
-  const addAssociatedCharacter = (character) => {
-    story.associatedCharacters = [...story.associatedCharacters, character.id]
+  const addCharacter = (character) => {
+    story.characters = [...story.characters || [], character.id]
   }
 
-  const removeAssociatedCharacter = (character) => {
-    story.associatedCharacters = story.associatedCharacters.filter(ac => ac !== character.id)
+  const removeCharacter = (character) => {
+    story.characters = story.characters.filter(ac => ac !== character.id)
   }
 
   const saveStory = () => {
@@ -46,7 +46,7 @@
     }
   }
 
-  export let storyToEdit, allCharacters = [], allSubplots = []
+  export let existingStory, allCharacters = [], allSubplots = []
 </script>
 
 <main>
@@ -81,18 +81,24 @@
   <Container>
     <Multiselect
       label="Add Subplot"
-      options={allSubplots.map((s) => ({ ...s, value: s.description }))}
-      selectItem={addAssociatedSubplot}
-      deselectItem={removeAssociatedSubplot}
+      options={allSubplots}
+      selectItem={addSubplot}
+      deselectItem={removeSubplot}
+      displayKey="description"
+      identificationKey="id"
+      alreadySelected={story.subplots}
     />
   </Container>
   <br />
   <Container>
     <Multiselect
       label="Add Characters"
-      options={allCharacters.map(c => ({ ...c, value: c.name }))}
-      selectItem={addAssociatedCharacter}
-      deselectItem={removeAssociatedCharacter}
+      options={allCharacters}
+      selectItem={addCharacter}
+      deselectItem={removeCharacter}
+      displayKey="name"
+      identificationKey="id"
+      alreadySelected={story.characters}
     />
   </Container>
   <br />

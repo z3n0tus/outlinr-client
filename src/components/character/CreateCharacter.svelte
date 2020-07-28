@@ -5,41 +5,36 @@
   import { events } from '../../store'
   import * as api from '../../api'
 
-  let name = ''
-  let imgURL = ''
-  let allEvents = []
-  let backstoryEvents = []
-
-  let createEventMode = false
-
-  onMount(() => {
-    events.subscribe((es) => {
-      allEvents = es.map(e => ({ ...e, value: e.description }))
-    })
-  })
+  const character = {
+    name: '',
+    backstoryEvents: [],
+    imgURL: ''
+  }
 
   const addBackstoryEvent = (event) => {
-    backstoryEvents = [...backstoryEvents, event.id]
+    character.backstoryEvents = [...character.backstoryEvents, event.id]
   }
 
   const removeBackstoryEvent = (event) => {
-    backstoryEvents = backstoryEvents.filter(be => be !== event.id)
+    character.backstoryEvents = character.backstoryEvents.filter(be => be !== event.id)
   }
 
   function save() {
-    if (name.length >= 0) {
-      api.saveEntity("Lee", "character", { backstoryEvents, name, imgURL })
+    if (character.name.length >= 0) {
+      api.saveEntity("Lee", "character", character)
     }
   }
+
+  export let allEvents
 </script>
 
 <main>
   <Container>
-    <Input bind:value={name} label="* Name" />
+    <Input bind:value={character.name} label="* Name" />
   </Container>
   <br />
   <Container>
-    <Input bind:value={imgURL} label="Image URL" />
+    <Input bind:value={character.imgURL} label="Image URL" />
   </Container>
   <br />
   <Container>
@@ -48,6 +43,8 @@
       options={allEvents}
       selectItem={addBackstoryEvent}
       deselectItem={removeBackstoryEvent}
+      displayKey="description"
+      identificationKey="id"
     />
   </Container>
   <br />

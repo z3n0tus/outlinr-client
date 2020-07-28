@@ -1,12 +1,13 @@
 <script>
   import Emoji from 'svelte-emoji'
   import Container from '../Container/index.svelte'
+  import Title from '../Title/index.svelte'
 
   export let label, text
 </script>
 
 <Container>
-  <p>{label}</p>
+  <Title>{label}</Title>
   <div>
     {#if text}
       {text}
